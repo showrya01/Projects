@@ -8,7 +8,7 @@ Brave, and Yandex — each in its own browser tab, fully pre-filled.
 
 No paid APIs. No proxies. No SaaS. Runs entirely on your machine.
 
-🔗 **Source:** https://github.com/showrya01/Projects/tree/main/DorkMatrix/frontend
+🔗 **Source:** https://github.com/showrya01/Projects/tree/main/DorkMatrix/
 
 ---
 
@@ -27,9 +27,9 @@ a normal user visit every time.
 ## How it looks 
 |HOME|
 |--------------|
-![DorkMatrix Webpage](frontend/screenshots/webpage.png)
-|DASHBOARD |
-![Dashboard](frontend/screenshots/Dashboard.png)
+![DorkMatrix Webpage](./Screenshots/web.png)
+|DASHBOARD|
+![DorkMatrix Dashboard](./Screenshots/dashboard.png)
 
 
 
@@ -45,28 +45,28 @@ npm -v
 
 ### Step 1 — Get the code
 
-## Download Frontend Package
+## Download  Package
 
 Using wget:
 
 ```bash
-wget https://raw.githubusercontent.com/showrya01/Projects/main/DorkMatrix/frontend/dorkmatrix-frontend.tar.gz
+wget https://raw.githubusercontent.com/showrya01/Projects/main/DorkMatrix/DorkMatrix.tar.gz
 mkdir dorkmatrix && cd dorkmatrix
-tar -xzf dorkmatrix-frontend.tar.gz
+tar -xzf DorkMatrix.tar.gz
 
 ```
 
 Using curl:
 
 ```bash
-curl -L -O https://raw.githubusercontent.com/showrya01/Projects/main/DorkMatrix/frontend/dorkmatrix-frontend.tar.gz
+curl -L -O https://raw.githubusercontent.com/showrya01/Projects/main/DorkMatrix/DorkMatrix.tar.gz
 mkdir dorkmatrix && cd dorkmatrix
-tar -xzf dorkmatrix-frontend.tar.gz
+tar -xzf DorkMatrix.tar.gz
 
 ```
 
 
-### Step 2 — Install dependencies
+### Step 2 — Install dependencies 
 
 ``` bash
 npm install
@@ -106,14 +106,29 @@ Expected output:
 - Local: http://localhost:3000
 ✓ Ready in ~2s
 ```
+If you see 
+```
 
+ ⚠ Port 3000 is in use, trying 3001 instead.
+  ▲ Next.js 14.2.3
+  - Local:        http://localhost:3001
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 3.3s (431 modules)
+ GET / 404 in 3485ms
+ GET / 404 in 46ms
+```
+Then use this to eliminate the error : 
+```
+rm -rf app components lib DorkMatrix.tar.gz
+
+```
 Open: **http://localhost:3000**
 
 ---
 ## Project Structure
 
 ```
-DorkMatrix/frontend/
+DorkMatrix/
 ├── src/
 │   ├── app/
 │   │   ├── layout.js              # Root layout
@@ -218,11 +233,12 @@ npm run dev
 You are running Windows npm inside WSL. Install Node.js natively inside WSL:
 
 ```bash
+rm -rf app components lib DorkMatrix.tar.gz 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install 18
 nvm use 18
-cd ~/Projects/DorkMatrix/frontend
+cd ~/Projects/DorkMatrix/
 rm -rf node_modules
 npm install
 npm run dev
