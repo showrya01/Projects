@@ -1,6 +1,6 @@
 
 
-# 🔍 ReconVorteX 
+#  ReconVorteX 
 
 ### Professional Bug Bounty Reconnaissance Platform
 
@@ -8,13 +8,7 @@
 
 ---
 
-## 📖 Overview
-
-ReconFramework is a **production-quality, modular reconnaissance platform** built for bug bounty hunters and penetration testers. It automates the entire recon workflow — from subdomain discovery through to composite risk scoring — in a single, consistent pipeline.
-
----
-
-## 🏗️ Architecture
+##  Architecture
 
 ```
 reconframework/
@@ -58,26 +52,6 @@ reconframework/
 └── docker-compose.yml
 ```
 
----
-
-## 🚀 Pipeline Phases
-
-| # | Phase | Method | Output |
-|---|-------|--------|--------|
-| 1 | **Subdomain Discovery** | Subfinder, Amass, Assetfinder, Findomain, crt.sh, AlienVault, Chaos, HackerTarget, RapidDNS | `subdomains.json` |
-| 2 | **Live Host Discovery** | httpx binary → aiohttp fallback, 150 concurrent, redirect chain | `live_hosts.json` |
-| 3 | **Technology Intelligence** | 35 pure-Python signatures (headers, HTML, cookies, scripts) | `technologies.json` |
-| 4 | **Asset Intelligence Engine** | 44 rules across hostname, title, tech, HTTP behaviour — CRITICAL→LOW tiers | `asset_intelligence.json` |
-| 5 | **Screenshot Collection** | Gowitness binary, CRITICAL/HIGH priority, self-contained HTML gallery | `screenshots/` |
-| 6 | **Historical URL Collection** | GAU binary + Wayback CDX API + Common Crawl, smart filter | `urls.json` |
-| 7 | **Sensitive Endpoint Discovery** | 50 patterns, 15 categories — zero network requests | `sensitive_endpoints.json` |
-| 8 | **JavaScript Intelligence** | 14 finding types, Shannon entropy scoring, AST-like secret detection | `js_analysis.json` |
-| 9 | **Subdomain Takeover Detection** | HTTP fingerprints (30 services) + Subzy + Nuclei takeover templates | `takeovers.json` |
-| 10 | **Safe Vulnerability Scanning** | Nuclei safe templates + 14 Python header checks (always-on) | `nuclei_results.json` |
-| 11 | **Risk Scoring Engine** | Composite scores from Phases 4, 7, 8, 9, 10 → ranked targets | `high_value_targets.json` |
-
----
-
 ## ⚙️ Installation
 
 ### Prerequisites
@@ -90,7 +64,10 @@ reconframework/
 ### Quick Start (Python only)
 
 ```bash
-wget
+wget https://raw.githubusercontent.com/showrya01/Projects/main/ReconVorteX/reconframework_FINAL.tar.gz
+(or)
+curl -LO https://raw.githubusercontent.com/showrya01/Projects/main/ReconVorteX/reconframework_FINAL.tar.gz
+tar -xzf reconframework_FINAL.tar.gz
 cd reconframework
 pip install -r requirements.txt
 python main.py --help
@@ -134,7 +111,7 @@ docker run --rm -v $(pwd)/output:/output reconframework phase1 example.com
 
 ---
 
-## 📋 Usage
+##  Usage
 
 ### Single Phase
 
@@ -169,7 +146,7 @@ python main.py run example.com --debug
 
 ```bash
 # Override config file
-python main.py run example.com --config /path/to/custom.yaml
+python main.py run example.com --config path/to/config.yaml
 
 # Override via environment variables
 RF_CHAOS_KEY=your_key RF_LOG_LEVEL=DEBUG python main.py run example.com
@@ -185,7 +162,7 @@ docker compose run recon phase7 example.com
 
 ---
 
-## 📁 Output Files
+##  Output Files
 
 All outputs are written to `./output/` after each phase:
 
@@ -213,107 +190,11 @@ output/
 └── audit.log                    # Append-only audit trail
 ```
 
-### Sample `high_value_targets.json` Entry
 
-```json
-{
-  "host": "admin.example.com",
-  "score": 47,
-  "risk": "CRITICAL",
-  "reasons": [
-    "Phase 4: CRITICAL asset — Jenkins CI detected (+20)",
-    "Phase 9: Takeover — GitHub Pages confidence=0.95 via subzy (+20)",
-    "Phase 10: scan score 7 — top: Missing Content-Security-Policy (+7)"
-  ],
-  "source_breakdown": {
-    "phase4": 20,
-    "phase9": 20,
-    "phase10": 7
-  }
-}
-```
 
----
+##  Security & Ethics
 
-## 🔌 Plugin System
-
-Adding a new data source requires **one file and one import**:
-
-```python
-# plugins/subdomains/mysource.py
-
-from core.base_plugin import BasePlugin, PluginContext, PluginResult
-
-class MySourcePlugin(BasePlugin[list[str]]):
-    NAME     = "mysource"
-    PRIORITY = 20          # lower = runs earlier
-
-    async def run(self, ctx: PluginContext) -> PluginResult[list[str]]:
-        domain = ctx.domain
-        # ... your discovery logic ...
-        return self._ok(["sub1.example.com", "sub2.example.com"])
-```
-
-Then add it to `plugins/subdomains/__init__.py`:
-
-```python
-from plugins.subdomains.mysource import MySourcePlugin
-ALL_PLUGINS = [..., MySourcePlugin]
-```
-
-That's it — the Phase 1 orchestrator picks it up automatically.
-
----
-
-## ⚙️ Configuration
-
-All behaviour is controlled via `config.yaml`. Every setting can be overridden with environment variables prefixed `RF_`:
-
-```yaml
-phase1:
-  max_concurrent_tools: 4
-  http_timeout: 30
-  chaos_key: ""          # or: RF_CHAOS_KEY=your_key
-
-phase2:
-  concurrency: 150       # concurrent HTTP probes
-  timeout_s: 10
-  max_redirects: 5
-
-phase7:
-  min_severity: "LOW"    # CRITICAL | HIGH | MEDIUM | LOW | INFO
-
-phase11:
-  tier_critical: 30      # score thresholds
-  tier_high:     20
-  tier_medium:   10
-```
-
-See [`config.yaml`](config.yaml) for the complete reference.
-
----
-
-## 🧪 Testing
-
-```bash
-# Run full test suite
-pytest tests/ -v
-
-# Run with coverage
-pytest tests/ --cov=. --cov-report=html
-
-# Run a single phase's tests
-pytest tests/test_phase7.py -v
-
-# Run specific test class
-pytest tests/test_phase8.py::TestJSExtractorAWS -v
-```
-
----
-
-## 🔒 Security & Ethics
-
-> **⚠️ Important:** This tool is designed for **authorised security assessments only.**
+> ** Important:** This tool is designed for **authorised security assessments only.**
 
 - Only run against targets you have **explicit written permission** to test
 - All active probing (Phases 2, 9, 10) respects configured rate limits
@@ -323,7 +204,7 @@ pytest tests/test_phase8.py::TestJSExtractorAWS -v
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -344,7 +225,7 @@ pytest tests/test_phase8.py::TestJSExtractorAWS -v
 
 ---
 
-## 📊 Performance
+##  Performance
 
 Tested against a scope with ~5,000 subdomains:
 
@@ -365,13 +246,13 @@ Tested against a scope with ~5,000 subdomains:
 
 ---
 
-## 📄 License
+##  License
 
 MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🙏 Acknowledgements
+##  Acknowledgements
 
 Built with ❤️ using tooling from:
 - [ProjectDiscovery](https://projectdiscovery.io/) — Subfinder, httpx, Nuclei
